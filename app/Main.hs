@@ -6,15 +6,15 @@ module Main where
 
 import Data.Aeson
 import Data.Aeson.Types
-import Network.HTTP.Simple
-import Text.Layout.Table
-import Text.Printf
-import Universum
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Char8 as BC
 import qualified Data.ByteString.Lazy as L
 import qualified Data.ByteString.Lazy.Char8 as LC
+import Network.HTTP.Simple
 import qualified System.Environment as Env
+import Text.Layout.Table
+import Text.Printf
+import Universum
 
 main :: IO ()
 main =
@@ -28,19 +28,19 @@ main =
             Right stats ->
               case stats of
                 Just a ->
-                  -- putStrLn $ ("Here are the stats for: " <> (unNftCollectionSlug cslug))
-                  putStrLn $
-                    tableString
-                      [def, fixedLeftCol 20]
-                      unicodeRoundS
-                      def
-                      [ rowG ["Average price" :: String, (formatFloat . averagePrice $ a) <> " ETH" :: String],
-                        rowG ["Floor price" :: String, (formatFloat . floorPrice $ a) <> " ETH" :: String],
-                        rowG ["Total volume" :: String, (formatFloat . totalVolume $ a) <> " ETH" :: String],
-                        rowG ["Total sales" :: String, (show . totalSales $ a) :: String],
-                        rowG ["Total items" :: String, (show . totalSupply $ a) :: String],
-                        rowG ["Total owners" :: String, (show . numOwners $ a) :: String]
-                      ]
+                  let title = "Here are the stats for: \"" <> (unNftCollectionSlug cslug) <> "\" collection:"
+                      table = tableString
+                        [def, fixedLeftCol 20]
+                        unicodeRoundS
+                        def
+                        [ rowG ["Average price" :: String, (formatFloat . averagePrice $ a) <> " ETH" :: String],
+                          rowG ["Floor price" :: String, (formatFloat . floorPrice $ a) <> " ETH" :: String],
+                          rowG ["Total volume" :: String, (formatFloat . totalVolume $ a) <> " ETH" :: String],
+                          rowG ["Total sales" :: String, (show . totalSales $ a) :: String],
+                          rowG ["Total items" :: String, (show . totalSupply $ a) :: String],
+                          rowG ["Total owners" :: String, (show . numOwners $ a) :: String]
+                        ]
+                  in putStrLn title >> putStrLn table
                 Nothing ->
                   let errMsg = "Failed to decode collection stats" :: String
                    in putStrLn errMsg
